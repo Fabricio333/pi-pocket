@@ -12,7 +12,7 @@ from pathlib import Path
 p=Path.home()/'.local/share/nostr-wot-pocket/installed.json'
 p.parent.mkdir(parents=True,exist_ok=True)
 v=set(json.loads(p.read_text())) if p.exists() else {'pay21'}
-v.update(('satsbell','wifi'))
+v.update(('satsbell','wifi','speaker'))
 p.write_text(json.dumps(sorted(v)))
 PY
 sudo systemctl restart nostr-wot-pocket

@@ -168,8 +168,8 @@ class LedWorker:
 
 def _maintain_audio():
     env=os.environ.copy();env.setdefault('XDG_RUNTIME_DIR',f'/run/user/{os.getuid()}')
-    address=os.environ.get('POCKET_SPEAKER_ADDRESS');sink=os.environ.get('POCKET_AUDIO_SINK','@DEFAULT_SINK@')
     while True:
+        address=os.environ.get('POCKET_SPEAKER_ADDRESS');sink=os.environ.get('POCKET_AUDIO_SINK','@DEFAULT_SINK@')
         try:
             check=subprocess.run(['pactl','get-sink-volume',sink],env=env,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,timeout=3)
             if check.returncode and address:

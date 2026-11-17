@@ -4,6 +4,7 @@ import qrcode
 from PIL import Image
 from ..satsbell import get_bell
 from ..ui import MUTED
+from ..ringtones import Ringtones,get_preview
 
 def address_lines(address):
     number, separator, domain = address.partition('@')
@@ -16,8 +17,21 @@ class App:
         self.ctx = context; self.bell = get_bell(context)
         self.selected = 0; self.page = 'menu'; self.dirty = True; self.last = 0
         self.notice = ''; self.notice_until = 0; self.qr = None
+        self.ringtones = Ringtones(); self.sound_mode = self.ringtones.mode
+        self.preview=get_preview();self.sound_selection=0
 
     def handle(self, keys):
+        if self.page == 'sounds':
+            if 'up' in keys:self.sound_selection=(self.sound_selection-1)%3
+            if 'down' in keys:self.sound_selection=(self.sound_selection+1)%3
+            if 'ok' in keys:
+                if self.sound_selection==0:
+                    self.sound_mode='ordered' if self.sound_mode=='shuffle' else 'shuffle'
+                    self.ringtones.set_mode(self.sound_mode)
+                elif self.sound_selection==1:self.preview.start(getattr(self.ctx,'sink','@DEFAULT_SINK@'))
+                else:self.preview.stop()
+            self.dirty=True
+            return
         if self.page == 'confirm':
             if 'up' in keys:
                 self.bell.action('release'); self.page = 'menu'
@@ -27,8 +41,8 @@ class App:
         if self.page != 'menu':
             if keys: self.page = 'menu'; self.dirty = True
             return
-        if 'up' in keys: self.selected = (self.selected - 1) % 5
-        if 'down' in keys: self.selected = (self.selected + 1) % 5
+        if 'up' in keys: self.selected = (self.selected - 1) % 6
+        if 'down' in keys: self.selected = (self.selected + 1) % 6
         if 'ok' in keys:
             if self.selected == 0: self.bell.action('create')
             elif self.selected == 1:
@@ -43,10 +57,12 @@ class App:
                     self.qr.paste(code, ((240-code.width)//2, (240-code.height)//2)); self.page = 'qr'
             elif self.selected == 2: self.bell.action('test')
             elif self.selected == 3: self.page = 'confirm'
-            else: self.page = 'history'
+            elif self.selected == 4: self.page = 'history'
+            else:self.page='sounds'
         self.dirty = True
 
     def back(self):
+        if self.page=='sounds':self.preview.stop()
         if self.page != 'menu': self.page = 'menu'; self.dirty = True; return True
         return False
 
@@ -61,6 +77,13 @@ class App:
     def render(self):
         if self.page == 'qr': return self.qr
         u = self.ctx.ui
+        if self.page=='sounds':
+            im,d=u.base('Sound settings',str(len(self.ringtones.tracks()))+' Argentine clips')
+            u.text(d,100,self.preview.error or self.preview.current or 'Just for fun. No payment.',13,MUTED)
+            mode='Shuffle' if self.sound_mode=='shuffle' else 'In order'
+            for i,label in enumerate(['Mode: '+mode,'Play all in order','Stop preview']):
+                u.card(d,124+i*30,label,i==self.sound_selection)
+            u.footer(d);return im
         im, d = u.base('Doorbell', self.bell.error or self.notice or self.bell.status)
         if self.page == 'confirm':
             u.text(d, 110, 'Release this address?', 18)
@@ -75,9 +98,10 @@ class App:
                 u.text(d, 137, domain, 17, MUTED)
             else:
                 u.text(d, 111, 'No address yet', 19, bold=True)
-            labels = ['Create address', 'Show address QR', 'Test JBL sound', 'Release address', 'Recent payments']
+            mode='Shuffle' if self.sound_mode=='shuffle' else 'In order'
+            labels = ['Create address', 'Show address QR', 'Test JBL sound', 'Release address', 'Recent payments', 'Sounds: '+mode]
             first=max(0,self.selected-1)
             for i, label in enumerate(labels[first:first+2]): u.card(d, 156+i*30, label, first+i==self.selected)
         u.footer(d); return im
 
-    def close(self): pass
+    def close(self): self.preview.stop()

@@ -21,6 +21,8 @@ def run():
     registry=Registry(state)
     ctx=SimpleNamespace(ui=ui,events=queue.Queue(),invoice=None,
                         sink=os.environ.get('POCKET_AUDIO_SINK','@DEFAULT_SINK@'))
+    from .speaker import get_speaker
+    get_speaker(ctx)
     if os.environ.get('POCKET_LED_ADDRESS') or os.environ.get('POCKET_SPEAKER_ADDRESS'):
         from .celebration import prepare
         prepare()

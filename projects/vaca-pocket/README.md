@@ -17,6 +17,9 @@ A miniapp launcher and bundled app marketplace for Raspberry Pi Zero 2 W with th
 
 | App | What it does |
 | --- | --- |
+| Doorbell | Dedicated Lightning address; 13 Argentine meme ringtones in shuffle or sequential mode, plus Play all / Stop preview in Sound settings. |
+| Speaker settings | Overall volume, mute, Bluetooth scanning, pairing, speaker selection and ringtone preview. |
+| Wi-Fi setup | Scan a hotspot QR and paste network details from a phone. |
 | Pay 21 | A full-screen Lightning QR for 21 sats to fabri@nostrwot.com. Validates NIP-57 receipts, shows confirmation, and plays cached thunder plus voice through Bluetooth. |
 | Thunder Lab | Preview thunder-only or payment audio, without creating a payment. |
 | Clock | Offline clock and date. |

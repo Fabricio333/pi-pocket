@@ -89,5 +89,18 @@
     "module": "pocket.apps.wifi",
     "color": "#34d399",
     "version": "1.0.0"
+  },
+  {
+    "id": "speaker",
+    "name": "Speaker settings",
+    "category": "SYSTEM",
+    "description": [
+      "Change overall speaker volume.",
+      "Scan, pair and switch speakers.",
+      "Settings survive reboot."
+    ],
+    "module": "pocket.apps.speaker",
+    "color": "#34d399",
+    "version": "1.0.0"
   }
 ]

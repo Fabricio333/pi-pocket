@@ -28,7 +28,7 @@ class BellTests(unittest.TestCase):
 
     def test_sound_uses_existing_asset_and_reconnects_missing_sink(self):
         from pocket.satsbell import play_sound
-        with patch('pocket.satsbell.subprocess.run',return_value=SimpleNamespace(stdout='')) as run:
+        with patch('pocket.satsbell.subprocess.run',return_value=SimpleNamespace(stdout='')) as run, patch('pocket.ringtones.Ringtones.next',return_value=None):
             play_sound('bluez_sink.90_F2_60_5E_89_28.a2dp_sink')
             calls=[c.args[0] for c in run.call_args_list]
             self.assertEqual(calls[1],['bluetoothctl','--timeout','10','connect','90:F2:60:5E:89:28'])

@@ -18,9 +18,12 @@ from coincurve import PrivateKey
 ORIGIN = 'https://zaps.nostr-wot.com'
 _sound_lock = threading.Lock()
 
-def play_sound(sink):
+def play_sound(sink,track=None,cancel=None):
     """Serialize cached playback and reconnect the configured Bluetooth sink."""
+    from .ringtones import Ringtones,stop_preview
+    if cancel is None:stop_preview()
     with _sound_lock:
+        if cancel is not None and cancel.is_set():return None
         env = os.environ.copy()
         env['XDG_RUNTIME_DIR'] = '/run/user/1000'
         if sink.startswith('bluez_sink.'):
@@ -31,8 +34,27 @@ def play_sound(sink):
                 subprocess.run(['bluetoothctl','--timeout','10','connect',address],
                     capture_output=True, timeout=15, check=True)
         from .ui import ROOT
-        subprocess.run(['paplay', '--device='+sink, str(ROOT/'assets/audio/doorbell-announcement.wav')],
-                       env=env, timeout=30, check=True)
+        if track is None:track=Ringtones().next()
+        path=track['path'] if track else ROOT/'assets/audio/doorbell-announcement.wav'
+        title=track['title'] if track else 'Doorbell'
+        print('Doorbell ringtone: '+title,flush=True)
+        command=['paplay','--device='+sink,str(path)]
+        if cancel is None:
+            subprocess.run(command,env=env,timeout=30,check=True)
+        else:
+            player=subprocess.Popen(command,env=env)
+            deadline=time.monotonic()+30
+            try:
+                while player.poll() is None:
+                    if cancel.wait(.05):return None
+                    if time.monotonic()>deadline:raise TimeoutError('Audio playback timed out')
+                if player.returncode:raise subprocess.CalledProcessError(player.returncode,command)
+            finally:
+                if player.poll() is None:
+                    player.terminate()
+                    try:player.wait(timeout=2)
+                    except subprocess.TimeoutExpired:player.kill();player.wait()
+        return title
 
 def compact(value):
     return json.dumps(value, separators=(',', ':'), ensure_ascii=False)

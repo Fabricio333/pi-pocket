@@ -13,3 +13,5 @@ The optional Sky bridge uses `nostr-wot-sdk/signers` (GPL-3.0-only), `nostr-tool
 The additional multicolor effect identifiers follow the documented Findn controller mapping in [ha-findn-led-ble](https://github.com/hirotasoshu/ha-findn-led-ble/blob/main/custom_components/findn_led_ble/device_protocol.py). No spatial pixel-buffer API is inferred from these built-in effects.
 
 - Spanish doorbell voice: Piper `es_MX-ald-medium`, synthesized locally. Model card retained in `assets/audio/VOICE_MODEL_CARD_ES`; the dataset uses the Unlicense. Source: https://huggingface.co/rhasspy/piper-voices/tree/main/es/es_MX/ald/medium. The two-tone chime is original procedural audio.
+
+- Optional Argentine meme ringtone library: source pages and MP3 URLs are recorded in `assets/audio/ringtones.json` (Myinstants and Banjotabs). Downloaded MP3s and normalized WAV copies remain in the device runtime library, outside the Git source backup. Rights remain with the original creators.

@@ -13,6 +13,30 @@ at least 21 sats after **Ready to ring**. No payment is sent automatically.
 The wallet is dedicated to this app and remains identical across restarts.
 Closing the app keeps monitoring active; restarting the launcher resumes it.
 
+## Rotating Argentine meme ringtones
+
+Doorbell uses a cached collection of 13 short clips: Moria, Hola Susana,
+Ricardo Fort, Ponele voluntad, the collective whistle, and more. **Sounds: Shuffle**
+is the default; every clip plays once before the bag reshuffles, with no immediate
+repeat at the boundary. Open **Sounds** and select **Mode** to switch to **In order**.
+Sound settings also has **Play all in order** for a full just-for-fun preview and
+**Stop preview** to stop immediately. Leaving Sound settings stops the preview;
+a qualifying payment interrupts it for the real ring. The preview does not advance
+the payment rotation.
+
+The chosen mode and position survive restarts. **Test JBL sound** previews the next
+clip and advances the same rotation. Each verified qualifying payment gets one
+sound; anonymous Lightning payments cannot reliably identify a returning person.
+
+Source links are recorded in `assets/audio/ringtones.json`. Run
+`python3 scripts/fetch-ringtones.py` on a computer with ffmpeg to download the MP3s
+and prepare normalized offline WAV clips (at most eight seconds each). Copy the
+resulting `~/.local/share/nostr-wot-pocket/ringtones/` directory to the same state
+directory on the Pi. Playback needs no network or ffmpeg. Original MP3s are retained
+in `ringtones/originals/`. The runtime audio library is separate from wallet state
+and Git source backups; the manifest/downloader allow it to be fetched again.
+An empty library falls back to the bundled Spanish door announcement.
+
 The default provider is `https://zaps.nostr-wot.com`.
 The default provider's `nostrwot.com` vanity address is normalized to its
 `zaps.nostr-wot.com` payment-metadata address. Only those two explicitly known
@@ -66,3 +90,19 @@ The device interface and setup page are branded **Vaca Inteligente**
 (`vacainteligente.com`). The setup hotspot is named `VacaInteligente-XXXX`.
 Legacy service names and private state paths are retained so updates find the
 existing wallet, installed apps and payment journal.
+
+## Speaker settings
+
+Open **Speaker settings** from the launcher. **Volume** opens a large volume
+control: button 1 raises volume by 5%, button 2 lowers it by 5%, and button 3
+returns. Levels are limited to 0–100%. The menu also provides mute/unmute and
+**Test ringtone**. The JBL hardware volume buttons stay synchronized with the displayed and saved level.
+
+For another speaker, put it in Bluetooth pairing mode, select **Bluetooth
+speakers**, wait for the scan, select its name and press button 3. The Pi pairs,
+trusts and connects the device, selects its A2DP output and applies the saved
+volume. Existing audio streams move to it and the previous speaker disconnects
+after the new one is ready. Use **Search again** to repeat discovery. Standard
+Just Works pairing is supported; speakers requiring a typed PIN need separate
+setup. Speaker choice, volume and mute persist in the private runtime settings.
+All device apps use the selected output, including doorbell and sound previews.
