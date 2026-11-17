@@ -20,8 +20,10 @@ class App:
             if 'down' in keys:self.device_selection=(self.device_selection+1)%count
             if 'ok' in keys:
                 if self.device_selection==0:s.enqueue('scan')
-                elif not s.busy:
-                    s.enqueue('connect',s.devices[(self.device_selection-1)%len(s.devices)]);self.page='menu'
+                else:
+                    device=s.devices[(self.device_selection-1)%len(s.devices)]
+                    if s.enqueue('connect',device):
+                        s.message='Connecting: '+device['name'];s.error='';self.page='menu'
         else:
             if 'up' in keys:self.selected=(self.selected-1)%4
             if 'down' in keys:self.selected=(self.selected+1)%4

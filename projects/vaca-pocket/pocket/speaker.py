@@ -10,6 +10,7 @@ import time
 from .ringtones import state_directory,stop_preview
 
 MAC=re.compile(r'^[0-9A-F]{2}(?::[0-9A-F]{2}){5}$')
+A2DP_SINK='0000110b-0000-1000-8000-00805f9b34fb'
 
 class Speaker:
     def __init__(self,context=None,directory=None):
@@ -53,14 +54,15 @@ class Speaker:
     def enqueue(self,action,value=None):
         if action=='apply':
             with self.lock:
-                if self.apply_pending:return
+                if self.apply_pending:return False
                 self.apply_pending=True
         else:
             with self.lock:
-                if action=='refresh' and self.busy:return
-                if action in self.pending:return
+                if action=='refresh' and self.busy:return False
+                if action in self.pending:return False
                 self.pending.add(action)
         self.jobs.put((action,value))
+        return True
 
     def set_volume(self,value):
         with self.lock:self.volume=max(0,min(100,int(value)))
@@ -128,19 +130,28 @@ class Speaker:
     def connect(self,address,name=None):
         address=address.upper()
         if not MAC.fullmatch(address):raise ValueError('Invalid Bluetooth address')
-        stop_preview();self.message='Connecting speaker...'
+        started=time.monotonic()
+        stop_preview();self.message='Checking speaker...'
+        print('Speaker connection requested: '+(name or address),flush=True)
         info=self.command(['bluetoothctl','info',address])
+        sink=self.find_sink(address) if 'Connected: yes' in info else None
         if 'Paired: yes' not in info:
+            self.message='Pairing speaker...'
             self.command(['bluetoothctl','--agent','NoInputNoOutput','--timeout','25','pair',address],timeout=30)
         self.command(['bluetoothctl','trust',address])
-        self.command(['bluetoothctl','--timeout','15','connect',address],timeout=20)
-        self.command(['pactl','set-card-profile','bluez_card.'+address.replace(':','_'),'a2dp_sink'],check=False)
-        sink=None
-        for _ in range(30):
+        if not sink:
+            self.message='Connecting audio...'
+            self.command(['bluetoothctl','--timeout','15','connect',address,A2DP_SINK],timeout=20)
             sink=self.find_sink(address)
-            if sink:break
-            time.sleep(.2)
+            if not sink:
+                self.message='Preparing audio output...'
+                self.command(['pactl','set-card-profile','bluez_card.'+address.replace(':','_'),'a2dp_sink'],check=False)
+                for _ in range(30):
+                    sink=self.find_sink(address)
+                    if sink:break
+                    time.sleep(.2)
         if not sink:raise RuntimeError('Audio output not ready; retry connect')
+        self.message='Switching audio output...'
         self.command(['pactl','set-default-sink',sink])
         old=self.address
         self.sink=sink;self.address=address
@@ -152,6 +163,7 @@ class Speaker:
             if ident.isdigit():self.command(['pactl','move-sink-input',ident,sink],check=False)
         if old and old!=address:self.command(['bluetoothctl','disconnect',old],check=False)
         self.connected=True;self.message='Connected';self.error=''
+        print('Speaker connected: '+self.name+' in '+str(round(time.monotonic()-started,1))+' s',flush=True)
 
     def worker(self):
         while True:

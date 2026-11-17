@@ -9,11 +9,11 @@ This runs on Raspberry Pi OS with NetworkManager. It is kept here as a project
 backup; it is not automatically included in the SeedSigner Buildroot image.
 
 Source: https://github.com/Fabricio333/vaca-pocket/tree/feat/pi-satsbell-wifi
-Source commit: `7e6513f6377379b59e2a0539877329ddac9d47c9`
+Source commit: `89f064c0d775e9bfce1c058d7ced2cc9f0d1a7cf`
 
 See `vaca-pocket/README.md` for the base installation and
 `vaca-pocket/docs/satsbell.md` for Sats Bell and phone Wi-Fi setup.
-86 development tests passed; live provisioning/address claim, launcher startup,
+88 development tests passed; live provisioning/address claim, launcher startup,
 JBL connection and audio playback completed on the Pi. The confirmed 22-sat payment was recovered once after fixing the service address
 alias mismatch. Phone camera/hotspot transition still requires verification.
 

@@ -42,8 +42,31 @@ class SpeakerTests(unittest.TestCase):
         self.assertIn(['pactl','move-sink-input','12',SINK],calls)
         self.assertIn(['bluetoothctl','disconnect',OLD],calls)
         self.assertTrue(any('NoInputNoOutput' in c for c in calls))
+        from pocket.speaker import A2DP_SINK
+        self.assertIn(['bluetoothctl','--timeout','15','connect',NEW,A2DP_SINK],calls)
         self.assertEqual(Speaker(directory=self.temp.name).address,NEW)
         self.assertEqual(s.name,'New JBL')
+
+    def test_ready_audio_output_skips_reconnecting_and_reselecting_profile(self):
+        calls=[]
+        def command(args,**kwargs):
+            calls.append(args)
+            if args[:2]==['bluetoothctl','info']:return 'Name: Headphones\nPaired: yes\nConnected: yes'
+            if args==['pactl','list','short','sinks']:return '2 '+SINK+' module-bluez5-device.c'
+            return ''
+        self.speaker.command=command;self.speaker.connect(NEW)
+        self.assertFalse(any('connect' in c or 'set-card-profile' in c or 'pair' in c for c in calls))
+        self.assertEqual(self.ctx.sink,SINK)
+
+    def test_selecting_speaker_during_scan_queues_connection_and_shows_progress(self):
+        from pocket.apps.speaker import App
+        from pocket.ui import UI
+        s=self.speaker;s.busy=True;s.devices=[{'address':NEW,'name':'Headphones'}]
+        self.ctx.speaker=s;self.ctx.ui=UI()
+        app=App(self.ctx);app.page='devices';app.device_selection=1
+        app.handle({'ok'})
+        self.assertEqual(s.jobs.get_nowait(),('connect',s.devices[0]))
+        self.assertEqual(app.page,'menu');self.assertIn('Connecting',s.message)
 
     def test_invalid_or_failed_pair_does_not_replace_selected_speaker(self):
         s=self.speaker;original=s.sink

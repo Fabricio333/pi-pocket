@@ -106,3 +106,8 @@ after the new one is ready. Use **Search again** to repeat discovery. Standard
 Just Works pairing is supported; speakers requiring a typed PIN need separate
 setup. Speaker choice, volume and mute persist in the private runtime settings.
 All device apps use the selected output, including doorbell and sound previews.
+
+Speaker discovery runs for eight seconds. Selecting a known name during a scan
+queues the connection and shows progress immediately. Connection status advances
+through pairing, music-audio connection and output preparation. Connections
+target A2DP directly and reuse an existing audio output when available.
