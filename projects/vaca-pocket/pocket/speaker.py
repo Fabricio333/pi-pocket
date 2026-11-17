@@ -93,6 +93,23 @@ class Speaker:
             if len(fields)>1 and marker in fields[1].lower():return fields[1]
         return None
 
+    def reconnect(self):
+        # An existing audio output already carries the hardware button level.
+        # Reconnecting/reselecting its profile can reset AVRCP volume on speakers.
+        try:self.refresh()
+        except Exception:
+            if self.address:self.connect(self.address,None if self.name=='Bluetooth speaker' else self.name)
+            else:self.apply();self.refresh()
+            return
+        if self.name=='Bluetooth speaker' and self.address:
+            try:
+                info=self.command(['bluetoothctl','info',self.address])
+                name=re.search(r'\bName: (.+)',info)
+                if name:self.name=name.group(1)
+            except Exception:pass
+        if self.sink!='@DEFAULT_SINK@':self.command(['pactl','set-default-sink',self.sink])
+        self.route();self.save()
+
     def scan(self):
         self.message='Searching for speakers...'
         self.command(['bluetoothctl','power','on'])
@@ -148,11 +165,7 @@ class Speaker:
                 if action=='scan':self.scan()
                 elif action=='connect':self.connect(value['address'],value['name'])
                 elif action=='reconnect':
-                    if not self.has_saved:
-                        try:self.refresh()
-                        except Exception:pass
-                    if self.address:self.connect(self.address,None if self.name=='Bluetooth speaker' else self.name)
-                    else:self.apply();self.refresh()
+                    self.reconnect()
                 elif action=='apply':self.apply();self.message='Connected';self.error=''
                 elif action=='refresh':self.refresh()
             except Exception as exc:

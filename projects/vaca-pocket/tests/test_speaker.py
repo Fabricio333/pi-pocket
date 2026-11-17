@@ -76,6 +76,19 @@ class SpeakerTests(unittest.TestCase):
         self.speaker.command=lambda args,**kwargs:'Volume: 44%' if args[1]=='get-sink-volume' else 'Mute: no'
         self.speaker.refresh();self.assertEqual(self.speaker.volume,65)
 
+    def test_startup_keeps_connected_speaker_level_without_reconnecting(self):
+        calls=[]
+        def command(args,**kwargs):
+            calls.append(args)
+            if args[1]=='get-sink-volume':return 'Volume: 44%'
+            if args[1]=='get-sink-mute':return 'Mute: no'
+            if args[:2]==['bluetoothctl','info']:return 'Name: JBL Go 4'
+            return ''
+        self.speaker.command=command;self.speaker.reconnect()
+        self.assertEqual(self.speaker.volume,44)
+        self.assertEqual(Speaker(directory=self.temp.name).volume,44)
+        self.assertFalse(any('connect' in c or 'set-sink-volume' in c for c in calls))
+
     def test_device_controls_volume_pairing_and_mute(self):
         from pocket.apps.speaker import App
         from pocket.ui import UI

@@ -16,7 +16,7 @@
 [Doorbell and Wi-Fi setup](projects/vaca-pocket/docs/satsbell.md) ·
 [Backup details](projects/README.md)
 
-85 development tests passed. Runtime wallet databases,
+86 development tests passed. Runtime wallet databases,
 private keys, API credentials and Wi-Fi passwords are excluded from this backup.
 
 The earlier OS build project remains in this repository's history and branches.
