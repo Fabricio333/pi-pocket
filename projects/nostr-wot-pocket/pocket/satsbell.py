@@ -31,7 +31,7 @@ def play_sound(sink):
                 subprocess.run(['bluetoothctl','--timeout','10','connect',address],
                     capture_output=True, timeout=15, check=True)
         from .ui import ROOT
-        subprocess.run(['paplay', '--device='+sink, str(ROOT/'assets/audio/zap-announcement.wav')],
+        subprocess.run(['paplay', '--device='+sink, str(ROOT/'assets/audio/doorbell-announcement.wav')],
                        env=env, timeout=30, check=True)
 
 def compact(value):

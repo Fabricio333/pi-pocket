@@ -7,7 +7,7 @@ The Python environment must include system site packages for the existing GPIO
 drivers; the root Wi-Fi helper uses the OS Python with libnm installed by this script.
 
 Open **Sats Bell**. Buttons 1/2 move through the menu; button 3 selects; hold 3
-to return home. Create an address, show its Lightning QR, test JBL sound, release
+to return home. Create an address, show its Lightning QR, test the spoken “Someone is at the door” JBL announcement, release
 with confirmation, or inspect recent receipts. Pay the actual displayed address
 at least 21 sats after **Ready to ring**. No payment is sent automatically.
 The wallet is dedicated to this app and remains identical across restarts.

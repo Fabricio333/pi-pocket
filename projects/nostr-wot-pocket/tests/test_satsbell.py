@@ -32,7 +32,7 @@ class BellTests(unittest.TestCase):
             play_sound('bluez_sink.90_F2_60_5E_89_28.a2dp_sink')
             calls=[c.args[0] for c in run.call_args_list]
             self.assertEqual(calls[1],['bluetoothctl','--timeout','10','connect','90:F2:60:5E:89:28'])
-            self.assertTrue(calls[2][-1].endswith('assets/audio/zap-announcement.wav'))
+            self.assertTrue(calls[2][-1].endswith('assets/audio/doorbell-announcement.wav'))
             from pathlib import Path
             self.assertTrue(Path(calls[2][-1]).is_file())
 

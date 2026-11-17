@@ -9,7 +9,7 @@ This runs on Raspberry Pi OS with NetworkManager. It is kept here as a project
 backup; it is not automatically included in the SeedSigner Buildroot image.
 
 Source: https://github.com/Fabricio333/nostr-wot-pocket/tree/feat/pi-satsbell-wifi
-Source commit: `4cae763bd3b959fc5945d569db7e8ed88b4743af`
+Source commit: `cd550be83969f19f478ad50aa0af6a944197005a`
 
 See `nostr-wot-pocket/README.md` for the base installation and
 `nostr-wot-pocket/docs/satsbell.md` for Sats Bell and phone Wi-Fi setup.
