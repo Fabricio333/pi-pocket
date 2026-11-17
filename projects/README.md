@@ -9,7 +9,7 @@ This runs on Raspberry Pi OS with NetworkManager. It is kept here as a project
 backup; it is not automatically included in the SeedSigner Buildroot image.
 
 Source: https://github.com/Fabricio333/vaca-pocket/tree/feat/pi-satsbell-wifi
-Source commit: `6850ae796894721b6af4f5648e13a164d4d52659`
+Source commit: `4e0be5ed13bf6964f64e8e05fc42bb964553cfb7`
 
 See `vaca-pocket/README.md` for the base installation and
 `vaca-pocket/docs/satsbell.md` for Sats Bell and phone Wi-Fi setup.

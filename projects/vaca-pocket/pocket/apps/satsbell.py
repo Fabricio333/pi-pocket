@@ -5,6 +5,12 @@ from PIL import Image
 from ..satsbell import get_bell
 from ..ui import MUTED
 
+def address_lines(address):
+    number, separator, domain = address.partition('@')
+    if domain == 'zaps.nostr-wot.com':
+        domain = 'nostrwot.com'
+    return number, '@' + domain if separator else ''
+
 class App:
     def __init__(self, context):
         self.ctx = context; self.bell = get_bell(context)
@@ -28,7 +34,8 @@ class App:
             elif self.selected == 1:
                 if self.bell.address:
                     qr = qrcode.QRCode(box_size=1, border=4)
-                    qr.add_data('lightning:' + self.bell.address); qr.make(fit=True)
+                    number, domain = address_lines(self.bell.address)
+                    qr.add_data('lightning:' + number + domain); qr.make(fit=True)
                     code = qr.make_image().convert('RGB')
                     scale = 240 // code.width
                     self.qr = Image.new('RGB', (240, 240), 'white')
@@ -62,10 +69,15 @@ class App:
             for i, (amount, missed, at) in enumerate(self.bell.store.history()[:4]):
                 u.text(d, 105+i*25, f'{amount//1000} sats · '+('missed' if missed else 'rang'), 17)
         else:
-            u.text(d, 98, self.bell.address or 'No address yet', 16, bold=True)
+            if self.bell.address:
+                number, domain = address_lines(self.bell.address)
+                u.text(d, 94, number, 42, bold=True)
+                u.text(d, 137, domain, 17, MUTED)
+            else:
+                u.text(d, 111, 'No address yet', 19, bold=True)
             labels = ['Create address', 'Show address QR', 'Test JBL sound', 'Release address', 'Recent payments']
-            first=max(0,self.selected-2)
-            for i, label in enumerate(labels[first:first+3]): u.card(d, 121+i*30, label, first+i==self.selected)
+            first=max(0,self.selected-1)
+            for i, label in enumerate(labels[first:first+2]): u.card(d, 156+i*30, label, first+i==self.selected)
         u.footer(d); return im
 
     def close(self): pass
