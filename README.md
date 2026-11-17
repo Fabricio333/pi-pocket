@@ -6,7 +6,7 @@
 
 - Original cow logo, animated startup and emerald-and-cream device interface.
 - Doorbell: a persistent Lightning address, verified payments and a spoken
-  “Someone is at the door” announcement through the JBL speaker.
+  “Hay alguien en la puerta” announcement with a soft two-tone chime through the JBL speaker.
 - Phone Wi-Fi setup: scan the hotspot QR, then scan the setup-page QR.
 - Three-button app launcher, sound previews, clock and lighting controls.
 
