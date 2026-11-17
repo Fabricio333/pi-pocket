@@ -1,0 +1,12 @@
+[Unit]
+Description=WoT Pocket LAN calibration page
+After=nostr-wot-pocket-server.service
+Wants=nostr-wot-pocket-server.service
+[Service]
+WorkingDirectory=%h/nostr-wot-pocket
+EnvironmentFile=%h/.config/nostr-wot-pocket/server.env
+ExecStart=%h/nostr-wot-pocket/.venv-server/bin/python -u -m pocket.web
+Restart=on-failure
+RestartSec=3
+[Install]
+WantedBy=default.target

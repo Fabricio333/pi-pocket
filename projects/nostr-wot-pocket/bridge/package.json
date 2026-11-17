@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "nostr-tools": "^2.25.2",
+    "nostr-wot-sdk": "^3.0.1",
+    "ws": "^8.18.3"
+  },
+  "name": "nostr-wot-pocket-sky",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test *.test.mjs",
+    "build": "node ../scripts/build-sky.mjs"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0"
+  }
+}

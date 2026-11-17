@@ -1,0 +1,93 @@
+[
+  {
+    "id": "pay21",
+    "name": "Pay 21",
+    "category": "LIGHTNING",
+    "description": [
+      "21 sats to Fabri.",
+      "Full-screen payment QR.",
+      "Verified receipt + audio."
+    ],
+    "module": "pocket.apps.pay21",
+    "color": "#8b5cf6",
+    "version": "0.1.0"
+  },
+  {
+    "id": "thunder",
+    "name": "Thunder Lab",
+    "category": "SOUND",
+    "description": [
+      "Try thunder recordings",
+      "through your JBL speaker.",
+      "Audio is generated off-Pi."
+    ],
+    "module": "pocket.apps.thunder",
+    "color": "#f59e0b",
+    "version": "0.1.0"
+  },
+  {
+    "id": "clock",
+    "name": "Clock",
+    "category": "UTILITIES",
+    "description": [
+      "A quiet desk clock.",
+      "Date and local device time.",
+      "No network connection."
+    ],
+    "module": "pocket.apps.clock",
+    "color": "#22c55e",
+    "version": "0.1.0"
+  },
+  {
+    "id": "sky",
+    "name": "Obelisk Sky",
+    "category": "MULTIPLAYER",
+    "description": [
+      "Connect a remote signer.",
+      "Move, jump and dance.",
+      "Three-button controls."
+    ],
+    "module": "pocket.apps.sky",
+    "color": "#38bdf8",
+    "version": "0.1.0"
+  },
+  {
+    "id": "leds",
+    "name": "LED Controls",
+    "category": "LIGHTING",
+    "description": [
+      "React to speaker audio.",
+      "Tune brightness and timing.",
+      "Preview zap + sound free."
+    ],
+    "module": "pocket.apps.leds",
+    "color": "#f59e0b",
+    "version": "0.1.0"
+  },
+  {
+    "id": "satsbell",
+    "name": "Sats Bell",
+    "category": "LIGHTNING",
+    "description": [
+      "Your own Lightning doorbell.",
+      "21+ sats rings the JBL.",
+      "Persistent wallet and address."
+    ],
+    "module": "pocket.apps.satsbell",
+    "color": "#f59e0b",
+    "version": "1.0.0"
+  },
+  {
+    "id": "wifi",
+    "name": "Wi-Fi setup",
+    "category": "SYSTEM",
+    "description": [
+      "Open a temporary hotspot.",
+      "Paste Wi-Fi details on phone.",
+      "Automatic timeout recovery."
+    ],
+    "module": "pocket.apps.wifi",
+    "color": "#38bdf8",
+    "version": "1.0.0"
+  }
+]

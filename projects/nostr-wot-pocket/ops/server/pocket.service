@@ -1,0 +1,16 @@
+[Unit]
+Description=WoT Pocket headless audio and LED service
+Wants=pulseaudio.service
+After=pulseaudio.service
+
+[Service]
+Type=simple
+WorkingDirectory=%h/nostr-wot-pocket
+EnvironmentFile=%h/.config/nostr-wot-pocket/server.env
+ExecStart=%h/nostr-wot-pocket/.venv-server/bin/python -u -m pocket.server
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=10
+
+[Install]
+WantedBy=default.target
