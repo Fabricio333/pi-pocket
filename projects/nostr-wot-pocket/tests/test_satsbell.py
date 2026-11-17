@@ -14,6 +14,18 @@ def payment(**kwargs):
             'payment_hash':'a'*64, **kwargs}
 
 class BellTests(unittest.TestCase):
+    def test_default_provider_normalizes_only_known_address_aliases(self):
+        provider=Provider('01'*32)
+        provider.request=lambda *a,**kw:{'address':'682474@nostrwot.com'}
+        self.assertEqual(provider.address(),'682474@zaps.nostr-wot.com')
+        self.assertTrue(eligible(payment(extra={'lnaddress':'682474@zaps.nostr-wot.com'}),provider.address()))
+        self.assertFalse(eligible(payment(extra={'lnaddress':'999999@zaps.nostr-wot.com'}),provider.address()))
+        provider.request=lambda *a,**kw:{'address':'682474@unrelated.example'}
+        self.assertEqual(provider.address(),'682474@unrelated.example')
+        provider=Provider('01'*32,origin='https://custom.example')
+        provider.request=lambda *a,**kw:{'address':'682474@nostrwot.com'}
+        self.assertEqual(provider.address(),'682474@nostrwot.com')
+
     def test_sound_uses_existing_asset_and_reconnects_missing_sink(self):
         from pocket.satsbell import play_sound
         with patch('pocket.satsbell.subprocess.run',return_value=SimpleNamespace(stdout='')) as run:
@@ -157,5 +169,25 @@ class BellTests(unittest.TestCase):
         setup=Setup();setup.session={'expires':time.time()+600}
         with patch('pocket.wifi_setup.subprocess.run') as run:
             setup.open();run.assert_not_called()
+
+    def test_wifi_qr_encodes_credentials_and_cycles_to_setup_url(self):
+        from pocket.apps.wifi import App,wifi_payload
+        from pocket.ui import UI
+        self.assertEqual(wifi_payload('SatsBell-1234','012345abcdef'),
+                         'WIFI:T:WPA;S:SatsBell-1234;P:012345abcdef;;')
+        self.assertEqual(wifi_payload('a;b:c','x\\y"z,'),
+                         'WIFI:T:WPA;S:a\\;b\\:c;P:x\\\\y\\"z\\,;;')
+        session={'ssid':'SatsBell-1234','password':'012345abcdef',
+                 'url':'http://192.168.4.1:8788','expires':time.time()+600}
+        setup=SimpleNamespace(session=session,error='',open=lambda:self.fail('Hotspot should not restart'))
+        app=App(SimpleNamespace(ui=UI(),wifi_setup=setup))
+        for page in range(3):
+            self.assertEqual(app.page,page)
+            frame=app.render();self.assertEqual(frame.size,(240,240))
+            if page<2:
+                self.assertEqual(frame.getpixel((22,25)),(255,255,255))
+                self.assertEqual({color for count,color in app.qrs[page].getcolors()}, {(0,0,0),(255,255,255)})
+            app.handle({'ok'})
+        self.assertEqual(app.page,0)
 
 if __name__=='__main__':unittest.main()

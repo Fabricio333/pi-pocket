@@ -13,7 +13,11 @@ at least 21 sats after **Ready to ring**. No payment is sent automatically.
 The wallet is dedicated to this app and remains identical across restarts.
 Closing the app keeps monitoring active; restarting the launcher resumes it.
 
-The default provider is `https://zaps.nostr-wot.com`. V2 operation requests use
+The default provider is `https://zaps.nostr-wot.com`.
+The default provider's `nostrwot.com` vanity address is normalized to its
+`zaps.nostr-wot.com` payment-metadata address. Only those two explicitly known
+domains are aliases; username and settled-payment checks remain exact.
+V2 operation requests use
 exact-body hashes, signed kind-27235 events and transaction-token binding.
 Certificate-validated HTTPS rejects redirects and limits bodies to 40 KB.
 The full history is scanned in pages of ten with a 500-page hard stop.
@@ -33,7 +37,10 @@ Pay 21 app remains separate; Sats Bell does not reuse its recipient or fallback.
 ## Wi-Fi setup
 
 Open **Wi-Fi setup**, press button 3 and read the generated SSID/password on the
-screen. Join that WPA2 hotspot on a phone and open **http://192.168.4.1:8788**.
+screen. The first screen shows a **Wi-Fi QR**: scan it with the phone camera
+and accept the prompt to join the WPA2 hotspot. Press button 3 for a second QR
+that opens **http://192.168.4.1:8788**; press it again for the typed credentials.
+Buttons 1/2 also cycle these pages. Hold button 3 to return home.
 Enter the same setup password, paste the new Wi-Fi name and password, and submit.
 Keep the phone connected if it warns that the hotspot has no internet. A blank
 network password selects an open network. Credentials are saved by NetworkManager.

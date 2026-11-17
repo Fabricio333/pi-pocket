@@ -98,6 +98,13 @@ class Provider:
         value = self.request('/api/lightning-address?pubkey=' + self.pubkey)['address']
         if value is not None and (not isinstance(value, str) or value.count('@') != 1):
             raise ValueError('Invalid provider address')
+        # This provider advertises its vanity domain in address lookup, while
+        # settled LNbits receipts identify its canonical payment-service domain.
+        # Normalize only these explicitly known aliases, never arbitrary domains.
+        if value and self.origin == ORIGIN:
+            username, domain = value.split('@')
+            if domain in ('nostrwot.com', 'zaps.nostr-wot.com'):
+                value = username + '@zaps.nostr-wot.com'
         return value or ''
 
     def history(self, inkey):
