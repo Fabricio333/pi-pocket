@@ -1,6 +1,6 @@
-# Raspberry Pi Pocket system backup
+# Vaca Inteligente Pocket backup
 
-`nostr-wot-pocket/` is the source backup of the working Pi Zero 2 W Pocket system,
+`vaca-pocket/` is the source backup of the working Pi Zero 2 W Pocket system,
 including the Waveshare screen driver, three-button launcher, existing miniapps,
 JBL/PulseAudio playback, dedicated Sats Bell wallet client, Wi-Fi hotspot setup,
 service installers, test suite and third-party license notices.
@@ -8,12 +8,12 @@ service installers, test suite and third-party license notices.
 This runs on Raspberry Pi OS with NetworkManager. It is kept here as a project
 backup; it is not automatically included in the SeedSigner Buildroot image.
 
-Source: https://github.com/Fabricio333/nostr-wot-pocket/tree/feat/pi-satsbell-wifi
-Source commit: `cd550be83969f19f478ad50aa0af6a944197005a`
+Source: https://github.com/Fabricio333/vaca-pocket/tree/feat/pi-satsbell-wifi
+Source commit: `6850ae796894721b6af4f5648e13a164d4d52659`
 
-See `nostr-wot-pocket/README.md` for the base installation and
-`nostr-wot-pocket/docs/satsbell.md` for Sats Bell and phone Wi-Fi setup.
-67 development tests and 14 on-device tests passed; live provisioning/address claim, launcher startup,
+See `vaca-pocket/README.md` for the base installation and
+`vaca-pocket/docs/satsbell.md` for Sats Bell and phone Wi-Fi setup.
+69 development tests and 16 on-device tests passed; live provisioning/address claim, launcher startup,
 JBL connection and audio playback completed on the Pi. The confirmed 22-sat payment was recovered once after fixing the service address
 alias mismatch. Phone camera/hotspot transition still requires verification.
 

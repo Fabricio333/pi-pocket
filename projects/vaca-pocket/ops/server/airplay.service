@@ -1,0 +1,14 @@
+[Unit]
+Description=Vaca Inteligente AirPlay receiver
+Wants=pulseaudio.service
+After=pulseaudio.service
+
+[Service]
+Type=simple
+EnvironmentFile=%h/.config/nostr-wot-pocket/server.env
+ExecStart=/usr/bin/shairport-sync -c %h/nostr-wot-pocket/ops/server/shairport-sync.conf
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target
